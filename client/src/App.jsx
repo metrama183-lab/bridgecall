@@ -50,6 +50,16 @@ function AIProgressBar() {
 export default function App() {
   const { view, setView, setConnectionStatus } = useBridgeStore()
 
+  const params = new URLSearchParams(window.location.search)
+  const forcedView = params.get('view')
+  const isEmbedded = !!forcedView
+
+  useEffect(() => {
+    if (forcedView && (forcedView === 'patient' || forcedView === 'doctor' || forcedView === 'relay')) {
+      setView(forcedView)
+    }
+  }, [forcedView, setView])
+
   useEffect(() => {
     initAIWorkers()
   }, [])
@@ -73,7 +83,7 @@ export default function App() {
   }, [setConnectionStatus])
 
   return (
-    <div className="app">
+    <div className={`app ${isEmbedded ? 'app-embedded' : ''}`}>
       <AIProgressBar />
 
       <main className="app-main">
@@ -82,20 +92,22 @@ export default function App() {
         {view === 'doctor' && <DoctorView />}
       </main>
 
-      <QRExchange />
+      {!isEmbedded && <QRExchange />}
 
-      <nav className="app-nav">
-        {VIEW_LABELS.map((v) => (
-          <button
-            key={v.key}
-            className={`nav-btn ${view === v.key ? 'active' : ''}`}
-            onClick={() => setView(v.key)}
-          >
-            <span className="nav-icon">{v.icon}</span>
-            <span className="nav-label">{v.label}</span>
-          </button>
-        ))}
-      </nav>
+      {!isEmbedded && (
+        <nav className="app-nav">
+          {VIEW_LABELS.map((v) => (
+            <button
+              key={v.key}
+              className={`nav-btn ${view === v.key ? 'active' : ''}`}
+              onClick={() => setView(v.key)}
+            >
+              <span className="nav-icon">{v.icon}</span>
+              <span className="nav-label">{v.label}</span>
+            </button>
+          ))}
+        </nav>
+      )}
     </div>
   )
 }

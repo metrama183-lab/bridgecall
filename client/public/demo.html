@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BridgeCall — Live Demo</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: #0a0a1a;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      color: #e2e8f0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      overflow-x: hidden;
+    }
+
+    .demo-header {
+      text-align: center;
+      padding: 28px 20px 12px;
+    }
+
+    .demo-header h1 {
+      font-size: 28px;
+      font-weight: 800;
+      background: linear-gradient(135deg, #3b82f6, #06b6d4);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: -0.5px;
+    }
+
+    .demo-header p {
+      color: #94a3b8;
+      font-size: 14px;
+      margin-top: 4px;
+    }
+
+    .demo-stage {
+      display: flex;
+      gap: 48px;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 16px 20px 40px;
+      flex: 1;
+    }
+
+    .phone-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .phone-label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 15px;
+      font-weight: 600;
+      color: #cbd5e1;
+    }
+
+    .phone-label .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+
+    .phone-label .dot.patient { background: #3b82f6; box-shadow: 0 0 8px #3b82f640; }
+    .phone-label .dot.doctor  { background: #22c55e; box-shadow: 0 0 8px #22c55e40; }
+
+    .phone-frame {
+      position: relative;
+      width: 375px;
+      height: 720px;
+      background: #1a1a2e;
+      border-radius: 40px;
+      border: 3px solid #2a2a4a;
+      box-shadow:
+        0 0 0 1px #0f0f23,
+        0 20px 60px rgba(0,0,0,0.5),
+        inset 0 0 30px rgba(0,0,0,0.3);
+      overflow: hidden;
+      padding: 0;
+    }
+
+    .phone-notch {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 150px;
+      height: 28px;
+      background: #1a1a2e;
+      border-radius: 0 0 18px 18px;
+      z-index: 10;
+    }
+
+    .phone-notch::after {
+      content: '';
+      position: absolute;
+      top: 8px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 60px;
+      height: 5px;
+      background: #2a2a4a;
+      border-radius: 3px;
+    }
+
+    .phone-frame iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      border-radius: 37px;
+    }
+
+    .demo-arrow {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 320px;
+      color: #475569;
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    .demo-arrow svg {
+      width: 80px;
+      height: 24px;
+    }
+
+    .demo-footer {
+      text-align: center;
+      padding: 0 20px 20px;
+      color: #475569;
+      font-size: 12px;
+    }
+
+    .demo-footer a {
+      color: #3b82f6;
+      text-decoration: none;
+    }
+
+    @media (max-width: 900px) {
+      .demo-stage {
+        flex-direction: column;
+        align-items: center;
+        gap: 24px;
+      }
+      .demo-arrow {
+        margin-top: 0;
+        flex-direction: row;
+        transform: rotate(90deg);
+      }
+      .phone-frame {
+        width: 340px;
+        height: 660px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="demo-header">
+    <h1>BridgeCall</h1>
+    <p>Medical communication for zero-connectivity zones — UN Hackathon 2026</p>
+  </header>
+
+  <div class="demo-stage">
+    <div class="phone-wrapper">
+      <div class="phone-label">
+        <span class="dot patient"></span>
+        Patient Device
+      </div>
+      <div class="phone-frame">
+        <div class="phone-notch"></div>
+        <iframe
+          id="patient-frame"
+          src="/?view=patient&did=demo-patient-001"
+          allow="microphone; geolocation"
+        ></iframe>
+      </div>
+    </div>
+
+    <div class="demo-arrow">
+      <span>MQTT</span>
+      <svg viewBox="0 0 80 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M4 12h72M68 6l8 6-8 6" stroke="#475569" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <animate attributeName="opacity" values="0.3;1;0.3" dur="2s" repeatCount="indefinite"/>
+        </path>
+        <path d="M76 12H4M12 18l-8-6 8-6" stroke="#475569" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="0.4">
+          <animate attributeName="opacity" values="0.3;1;0.3" dur="2s" repeatCount="indefinite" begin="1s"/>
+        </path>
+      </svg>
+      <span>Broker</span>
+    </div>
+
+    <div class="phone-wrapper">
+      <div class="phone-label">
+        <span class="dot doctor"></span>
+        Doctor Device
+      </div>
+      <div class="phone-frame">
+        <div class="phone-notch"></div>
+        <iframe
+          id="doctor-frame"
+          src="/?view=doctor&did=demo-doctor-001"
+          allow="microphone; geolocation"
+        ></iframe>
+      </div>
+    </div>
+  </div>
+
+  <footer class="demo-footer">
+    Each phone is an independent app instance with its own identity &amp; MQTT connection.
+    <br>
+    Messages travel: Patient → HiveMQ Broker → Doctor — in real-time.
+  </footer>
+
+</body>
+</html>

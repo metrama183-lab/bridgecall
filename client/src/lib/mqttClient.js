@@ -15,9 +15,10 @@ function topicMatchesPattern(pattern, topic) {
 export function getClient() {
   if (client) return client
 
+  const uid = `${getDeviceId()}_${Math.random().toString(36).slice(2, 8)}`
   client = mqtt.connect('wss://broker.hivemq.com:8884/mqtt', {
-    clientId: `bridgecall_${getDeviceId()}`,
-    clean: false,
+    clientId: `bc_${uid}`,
+    clean: true,
     reconnectPeriod: 3000,
     connectTimeout: 30000,
     keepalive: 60,

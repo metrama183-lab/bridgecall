@@ -68,6 +68,14 @@ select {
 }
 
 /* ===== BOTTOM NAV ===== */
+.app-embedded {
+  padding-bottom: 0;
+}
+
+.app-embedded .app-main {
+  padding-bottom: 0;
+}
+
 .app-nav {
   position: fixed;
   bottom: 0;
