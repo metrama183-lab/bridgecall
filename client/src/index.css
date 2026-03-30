@@ -1,0 +1,1119 @@
+/* ===== RESET & BASE ===== */
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --bg: #0f172a;
+  --bg-card: #1e293b;
+  --bg-card-hover: #334155;
+  --bg-input: #0f172a;
+  --text: #f1f5f9;
+  --text-dim: #94a3b8;
+  --text-muted: #64748b;
+  --accent: #3b82f6;
+  --accent-glow: rgba(59, 130, 246, 0.3);
+  --danger: #ef4444;
+  --danger-glow: rgba(239, 68, 68, 0.4);
+  --success: #22c55e;
+  --success-glow: rgba(34, 197, 94, 0.3);
+  --warning: #f59e0b;
+  --border: #334155;
+  --radius: 12px;
+  --radius-sm: 8px;
+  --nav-height: 72px;
+}
+
+html, body {
+  height: 100%;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+  overflow: hidden;
+}
+
+button {
+  font: inherit;
+  cursor: pointer;
+  border: none;
+  background: none;
+  color: inherit;
+}
+
+select {
+  font: inherit;
+  color: var(--text);
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 6px 12px;
+  outline: none;
+}
+
+/* ===== APP LAYOUT ===== */
+.app {
+  height: 100vh;
+  height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+
+.app-main {
+  flex: 1;
+  overflow-y: auto;
+  padding-bottom: var(--nav-height);
+}
+
+/* ===== BOTTOM NAV ===== */
+.app-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: var(--nav-height);
+  background: var(--bg-card);
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding-bottom: env(safe-area-inset-bottom);
+  z-index: 100;
+}
+
+.nav-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 20px;
+  border-radius: var(--radius-sm);
+  transition: all 0.2s;
+  opacity: 0.6;
+}
+
+.nav-btn.active {
+  opacity: 1;
+  background: rgba(59, 130, 246, 0.1);
+}
+
+.nav-icon {
+  font-size: 24px;
+}
+
+.nav-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* ===== CONNECTION DOT ===== */
+.connection-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--text-muted);
+  flex-shrink: 0;
+}
+
+.connection-dot.connected {
+  background: var(--success);
+  box-shadow: 0 0 8px var(--success-glow);
+}
+
+.connection-dot.connecting {
+  background: var(--warning);
+  animation: pulse 1.5s infinite;
+}
+
+.connection-dot.offline {
+  background: var(--danger);
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+/* ===== PATIENT VIEW ===== */
+.patient-view {
+  padding: 16px;
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+.patient-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 0;
+}
+
+.patient-header h2 {
+  flex: 1;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.language-select {
+  font-size: 13px;
+}
+
+.patient-content {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding-top: 8px;
+}
+
+.load-models-btn {
+  background: var(--bg-card);
+  border: 1px dashed var(--border);
+  padding: 14px;
+  border-radius: var(--radius);
+  color: var(--accent);
+  font-weight: 600;
+  transition: all 0.2s;
+}
+
+.load-models-btn:hover:not(:disabled) {
+  background: var(--bg-card-hover);
+}
+
+.load-models-btn:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+/* ===== AI PROGRESS BAR (top, non-blocking) ===== */
+.ai-progress-bar-container {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: var(--bg-card);
+  padding: 6px 16px 8px;
+  border-bottom: 1px solid var(--border);
+}
+
+.ai-progress-track {
+  width: 100%;
+  height: 4px;
+  background: var(--bg);
+  border-radius: 2px;
+  overflow: hidden;
+  margin-bottom: 4px;
+}
+
+.ai-progress-fill {
+  height: 100%;
+  background: var(--accent);
+  border-radius: 2px;
+  transition: width 0.5s ease;
+}
+
+.ai-progress-text {
+  font-size: 11px;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+/* ===== RECORD BUTTON ===== */
+.record-button-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.record-button {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: var(--danger);
+  box-shadow: 0 0 0 0 var(--danger-glow);
+  transition: all 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+}
+
+.record-button:hover {
+  transform: scale(1.05);
+}
+
+.record-button.recording {
+  animation: record-pulse 1.2s ease-in-out infinite;
+  background: #dc2626;
+}
+
+@keyframes record-pulse {
+  0% { box-shadow: 0 0 0 0 var(--danger-glow); }
+  70% { box-shadow: 0 0 0 20px transparent; }
+  100% { box-shadow: 0 0 0 0 transparent; }
+}
+
+.record-button-inner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.record-stop-icon {
+  width: 32px;
+  height: 32px;
+  background: white;
+  border-radius: 6px;
+}
+
+.record-timer {
+  font-size: 32px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--danger);
+}
+
+.record-label {
+  color: var(--text-dim);
+  font-size: 14px;
+}
+
+/* ===== SYMPTOMS GRID ===== */
+.symptoms-grid, .body-map {
+  background: var(--bg-card);
+  border-radius: var(--radius);
+  padding: 16px;
+}
+
+.symptoms-title, .body-map-title {
+  font-size: 15px;
+  font-weight: 600;
+  margin-bottom: 12px;
+  color: var(--text-dim);
+}
+
+.symptoms-items {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+
+.symptom-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 10px 4px;
+  border-radius: var(--radius-sm);
+  background: var(--bg);
+  border: 2px solid transparent;
+  transition: all 0.2s;
+}
+
+.symptom-btn.active {
+  border-color: var(--accent);
+  background: rgba(59, 130, 246, 0.1);
+}
+
+.symptom-icon {
+  font-size: 24px;
+}
+
+.symptom-label {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--text-dim);
+  text-transform: uppercase;
+}
+
+/* ===== BODY MAP ===== */
+.body-map-count {
+  margin-left: auto;
+  font-size: 12px;
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.body-map-title {
+  display: flex;
+  align-items: center;
+}
+
+.body-map-container {
+  position: relative;
+  width: 100%;
+  max-width: 240px;
+  margin: 0 auto;
+  min-height: 420px;
+}
+
+.body-silhouette {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.body-svg {
+  width: 100%;
+  height: 100%;
+  fill: var(--bg-card-hover);
+  opacity: 0.5;
+}
+
+.body-zone-btn {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--bg);
+  border: 2px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  z-index: 2;
+}
+
+.body-zone-btn.active {
+  border-color: var(--danger);
+  background: rgba(239, 68, 68, 0.15);
+  box-shadow: 0 0 12px var(--danger-glow);
+}
+
+.body-zone-emoji {
+  font-size: 18px;
+}
+
+/* ===== MESSAGE STATUS PIPELINE ===== */
+.message-status {
+  background: var(--bg-card);
+  border-radius: var(--radius);
+  padding: 16px;
+}
+
+.status-pipeline {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+}
+
+.status-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  opacity: 0.3;
+  transition: all 0.3s;
+}
+
+.status-step.done {
+  opacity: 0.6;
+}
+
+.status-step.active {
+  opacity: 1;
+}
+
+.status-icon {
+  font-size: 20px;
+}
+
+.status-label {
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+.status-connector {
+  width: 20px;
+  height: 2px;
+  background: var(--border);
+  margin: 0 2px;
+  align-self: center;
+}
+
+.status-step.done .status-connector {
+  background: var(--success);
+}
+
+.status-explanation {
+  text-align: center;
+  font-size: 12px;
+  color: var(--text-dim);
+  margin-top: 10px;
+  font-style: italic;
+}
+
+.status-explanation.status-confirmed {
+  color: var(--success);
+  font-style: normal;
+  font-weight: 600;
+}
+
+/* ===== DOCTOR VIEW ===== */
+.doctor-view {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.doctor-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 16px;
+}
+
+.doctor-header h2 {
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.doctor-layout {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+}
+
+.doctor-sidebar {
+  width: 280px;
+  border-right: 1px solid var(--border);
+  overflow-y: auto;
+  flex-shrink: 0;
+}
+
+.doctor-main {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+@media (max-width: 640px) {
+  .doctor-layout {
+    flex-direction: column;
+  }
+  .doctor-sidebar {
+    width: 100%;
+    max-height: 200px;
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+  }
+}
+
+/* ===== MESSAGE LIST ===== */
+.message-list-empty {
+  padding: 40px 20px;
+  text-align: center;
+  color: var(--text-dim);
+}
+
+.empty-icon {
+  font-size: 48px;
+  display: block;
+  margin-bottom: 12px;
+}
+
+.empty-sub {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+.message-item {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--border);
+  transition: background 0.2s;
+}
+
+.message-item:hover {
+  background: var(--bg-card-hover);
+}
+
+.message-item.selected {
+  background: rgba(59, 130, 246, 0.1);
+  border-left: 3px solid var(--accent);
+}
+
+.message-item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.message-patient-id {
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.message-time {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.message-item-preview {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 4px;
+}
+
+.message-symptoms-badge {
+  font-size: 11px;
+  background: rgba(245, 158, 11, 0.15);
+  color: var(--warning);
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-weight: 600;
+}
+
+.message-status-badge {
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-weight: 600;
+  background: var(--bg);
+}
+
+.message-status-badge.delivered {
+  color: var(--success);
+  background: rgba(34, 197, 94, 0.1);
+}
+
+.message-status-badge.pending {
+  color: var(--warning);
+  background: rgba(245, 158, 11, 0.1);
+}
+
+.message-preview-text {
+  font-size: 13px;
+  color: var(--text-dim);
+  line-height: 1.4;
+}
+
+/* ===== TRANSCRIPT PANEL ===== */
+.transcript-panel-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 200px;
+  color: var(--text-muted);
+}
+
+.transcript-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.transcript-section {
+  background: var(--bg-card);
+  border-radius: var(--radius);
+  padding: 16px;
+}
+
+.transcript-section.translated {
+  border-left: 3px solid var(--accent);
+}
+
+.transcript-heading {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 10px;
+  color: var(--text-dim);
+}
+
+.transcript-icon {
+  font-size: 18px;
+}
+
+.lang-badge {
+  font-size: 11px;
+  background: var(--bg);
+  padding: 2px 8px;
+  border-radius: 8px;
+  color: var(--accent);
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.transcript-text {
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--text);
+}
+
+.symptoms-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.symptom-tag {
+  background: var(--bg);
+  padding: 4px 12px;
+  border-radius: 16px;
+  font-size: 13px;
+  font-weight: 500;
+  border: 1px solid var(--border);
+}
+
+.transcript-meta {
+  display: flex;
+  gap: 16px;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+/* ===== AUDIO PLAYER ===== */
+.audio-player {
+  background: var(--bg-card);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.audio-play-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  flex-shrink: 0;
+  transition: transform 0.2s;
+}
+
+.audio-play-btn:hover {
+  transform: scale(1.1);
+}
+
+.audio-progress-bar {
+  flex: 1;
+  height: 6px;
+  background: var(--bg);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.audio-progress-fill {
+  height: 100%;
+  background: var(--accent);
+  border-radius: 3px;
+  transition: width 0.1s linear;
+}
+
+.audio-label {
+  font-size: 12px;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+/* ===== RESPONSE RECORDER ===== */
+.response-recorder {
+  padding-top: 8px;
+}
+
+.response-record-btn {
+  width: 100%;
+  padding: 16px;
+  border-radius: var(--radius);
+  background: var(--accent);
+  color: white;
+  font-weight: 700;
+  font-size: 16px;
+  transition: all 0.2s;
+}
+
+.response-record-btn:hover {
+  opacity: 0.9;
+}
+
+.response-record-btn.recording {
+  background: var(--danger);
+  animation: record-pulse 1.2s ease-in-out infinite;
+}
+
+/* ===== RELAY VIEW ===== */
+.relay-view {
+  padding: 16px;
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+.relay-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 0;
+}
+
+.relay-header h2 {
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.relay-content {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding-top: 8px;
+}
+
+.relay-status-card {
+  background: var(--bg-card);
+  border-radius: var(--radius);
+  padding: 24px;
+  text-align: center;
+}
+
+.relay-icon {
+  font-size: 48px;
+  margin-bottom: 12px;
+}
+
+.relay-status-card h3 {
+  font-size: 18px;
+  margin-bottom: 8px;
+}
+
+.relay-status-card p {
+  color: var(--text-dim);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+/* ===== MESSAGE QUEUE ===== */
+.message-queue {
+  background: var(--bg-card);
+  border-radius: var(--radius);
+  padding: 16px;
+}
+
+.queue-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 15px;
+  margin-bottom: 12px;
+}
+
+.queue-count {
+  background: var(--accent);
+  color: white;
+  font-size: 12px;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-weight: 700;
+}
+
+.queue-empty {
+  text-align: center;
+  padding: 20px;
+  color: var(--text-dim);
+}
+
+.queue-empty-sub {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+.queue-items {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.queue-item {
+  background: var(--bg);
+  border-radius: var(--radius-sm);
+  padding: 12px;
+}
+
+.queue-item-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+
+.queue-patient {
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.queue-hops {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.queue-item-meta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: var(--text-dim);
+}
+
+.queue-status {
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.queue-status.pending {
+  color: var(--warning);
+}
+
+.queue-status.relayed {
+  color: var(--success);
+}
+
+/* ===== CONNECT BUTTON ===== */
+.connect-button-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.connect-btn {
+  width: 100%;
+  padding: 16px;
+  border-radius: var(--radius);
+  background: var(--success);
+  color: white;
+  font-weight: 700;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.2s;
+}
+
+.connect-btn:hover:not(:disabled) {
+  opacity: 0.9;
+}
+
+.connect-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.connect-btn.active {
+  background: var(--accent);
+}
+
+.connect-spinner {
+  width: 18px;
+  height: 18px;
+  border: 3px solid rgba(255,255,255,0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.connect-icon {
+  font-size: 20px;
+}
+
+.connection-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--text-dim);
+  justify-content: center;
+}
+
+.connection-indicator {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--text-muted);
+}
+
+.connection-indicator.connected {
+  background: var(--success);
+}
+
+/* ===== QR EXCHANGE ===== */
+.qr-exchange {
+  background: var(--bg-card);
+  border-radius: var(--radius);
+  margin: 16px;
+  padding: 20px;
+}
+
+.qr-title {
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 16px;
+  text-align: center;
+}
+
+.qr-role-select {
+  display: flex;
+  gap: 12px;
+}
+
+.qr-role-btn {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 20px 12px;
+  border-radius: var(--radius);
+  background: var(--bg);
+  border: 2px solid var(--border);
+  transition: all 0.2s;
+  font-weight: 600;
+}
+
+.qr-role-btn:hover {
+  border-color: var(--accent);
+}
+
+.qr-role-icon {
+  font-size: 32px;
+}
+
+.qr-role-sub {
+  font-size: 11px;
+  color: var(--text-muted);
+  font-weight: 400;
+}
+
+.qr-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.qr-display {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 16px;
+  background: white;
+  border-radius: var(--radius);
+  color: #000;
+}
+
+.qr-label {
+  font-size: 13px;
+  color: var(--text-dim);
+}
+
+.qr-warning {
+  font-size: 12px;
+  color: var(--warning);
+}
+
+.qr-instruction {
+  font-size: 14px;
+  color: var(--text-dim);
+  text-align: center;
+}
+
+.qr-scanner {
+  width: 100%;
+}
+
+.qr-video {
+  width: 100%;
+  max-height: 300px;
+  border-radius: var(--radius);
+  object-fit: cover;
+}
+
+.qr-scanner-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.qr-scan-btn, .qr-manual-btn {
+  width: 100%;
+  padding: 14px;
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+  font-size: 15px;
+  transition: all 0.2s;
+}
+
+.qr-scan-btn {
+  background: var(--accent);
+  color: white;
+}
+
+.qr-manual-btn {
+  background: var(--bg);
+  border: 1px solid var(--border);
+}
+
+.qr-stop-btn {
+  width: 100%;
+  padding: 12px;
+  background: var(--danger);
+  color: white;
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+  margin-top: 8px;
+}
+
+.qr-connected {
+  text-align: center;
+  padding: 20px;
+}
+
+.qr-connected-icon {
+  font-size: 48px;
+  display: block;
+  margin-bottom: 8px;
+}
+
+.qr-connected-sub {
+  font-size: 13px;
+  color: var(--text-dim);
+  margin-top: 4px;
+}
+
+/* ===== SCROLLBAR ===== */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 3px;
+}
