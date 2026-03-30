@@ -14,6 +14,10 @@ export default function AudioPlayer({ audioBase64 }) {
   }, [])
 
   useEffect(() => {
+    if (audioRef.current) {
+      audioRef.current.pause()
+      audioRef.current = null
+    }
     if (urlRef.current) URL.revokeObjectURL(urlRef.current)
 
     if (audioBase64) {

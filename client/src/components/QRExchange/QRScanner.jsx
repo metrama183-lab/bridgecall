@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from 'react'
 
 export default function QRScanner({ onScan }) {
   const [scanning, setScanning] = useState(false)
+  const [noBarcodeApi, setNoBarcodeApi] = useState(false)
   const videoRef = useRef(null)
   const streamRef = useRef(null)
   const scanningRef = useRef(false)
@@ -40,6 +41,8 @@ export default function QRScanner({ onScan }) {
           requestAnimationFrame(detect)
         }
         detect()
+      } else {
+        setNoBarcodeApi(true)
       }
     } catch (err) {
       console.error('Camera access denied:', err)
@@ -69,9 +72,19 @@ export default function QRScanner({ onScan }) {
             muted
             className="qr-video"
           />
-          <button className="qr-stop-btn" onClick={stopScan}>
-            Cancel
-          </button>
+          {noBarcodeApi && (
+            <p className="qr-no-api-msg">
+              Auto-scan not supported on this browser. Use paste instead.
+            </p>
+          )}
+          <div className="qr-scanner-actions">
+            <button className="qr-manual-btn" onClick={handleManualInput}>
+              📋 Paste Manually
+            </button>
+            <button className="qr-stop-btn" onClick={stopScan}>
+              Cancel
+            </button>
+          </div>
         </>
       ) : (
         <div className="qr-scanner-actions">

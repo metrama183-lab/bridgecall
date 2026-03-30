@@ -433,14 +433,14 @@ select {
 }
 
 .status-connector {
-  width: 20px;
+  width: 16px;
   height: 2px;
   background: var(--border);
-  margin: 0 2px;
+  flex-shrink: 0;
   align-self: center;
 }
 
-.status-step.done .status-connector {
+.status-connector.done {
   background: var(--success);
 }
 
@@ -512,6 +512,12 @@ select {
 }
 
 /* ===== MESSAGE LIST ===== */
+.message-list {
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
 .message-list-empty {
   padding: 40px 20px;
   text-align: center;
@@ -588,14 +594,25 @@ select {
   background: var(--bg);
 }
 
-.message-status-badge.delivered {
+.message-status-badge.delivered,
+.message-status-badge.seen {
   color: var(--success);
   background: rgba(34, 197, 94, 0.1);
+}
+
+.message-status-badge.sent {
+  color: var(--accent);
+  background: rgba(59, 130, 246, 0.1);
 }
 
 .message-status-badge.pending {
   color: var(--warning);
   background: rgba(245, 158, 11, 0.1);
+}
+
+.message-status-badge.relayed {
+  color: #8b5cf6;
+  background: rgba(139, 92, 246, 0.1);
 }
 
 .message-preview-text {
@@ -1085,6 +1102,13 @@ select {
   border-radius: var(--radius-sm);
   font-weight: 600;
   margin-top: 8px;
+}
+
+.qr-no-api-msg {
+  font-size: 12px;
+  color: var(--warning);
+  text-align: center;
+  padding: 8px;
 }
 
 .qr-connected {

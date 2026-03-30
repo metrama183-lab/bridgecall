@@ -1,3 +1,4 @@
+import { Fragment } from 'react'
 import { useBridgeStore } from '../../store/bridgeStore'
 
 const STAGES = [
@@ -20,16 +21,19 @@ export default function MessageStatus() {
     <div className="message-status">
       <div className="status-pipeline">
         {STAGES.map((stage, i) => (
-          <div
-            key={stage.key}
-            className={`status-step ${
-              i < currentIdx ? 'done' : i === currentIdx ? 'active' : 'pending'
-            }`}
-          >
-            <span className="status-icon">{stage.icon}</span>
-            <span className="status-label">{stage.label}</span>
-            {i < STAGES.length - 1 && <div className="status-connector" />}
-          </div>
+          <Fragment key={stage.key}>
+            <div
+              className={`status-step ${
+                i < currentIdx ? 'done' : i === currentIdx ? 'active' : 'pending'
+              }`}
+            >
+              <span className="status-icon">{stage.icon}</span>
+              <span className="status-label">{stage.label}</span>
+            </div>
+            {i < STAGES.length - 1 && (
+              <div className={`status-connector ${i < currentIdx ? 'done' : ''}`} />
+            )}
+          </Fragment>
         ))}
       </div>
       {processingStage === 'sent' && (

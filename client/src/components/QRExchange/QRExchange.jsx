@@ -1,33 +1,22 @@
 import { useState } from 'react'
-import { useBridgeStore } from '../../store/bridgeStore'
-import { WebRTCManager } from '../../lib/webrtcManager'
+import { getP2PManager } from '../../lib/p2pManager'
 import QRDisplay from './QRDisplay'
 import QRScanner from './QRScanner'
 
 export default function QRExchange() {
   const [step, setStep] = useState('idle')
   const [sdp, setSdp] = useState('')
-  const [rtc] = useState(() => new WebRTCManager())
-  const { setP2PStatus, addToRelayQueue } = useBridgeStore()
-
-  rtc.onStateChange = (state) => {
-    setP2PStatus(state)
-  }
-
-  rtc.onData = (data) => {
-    if (data.id && data.patientId) {
-      addToRelayQueue(data)
-    }
-  }
 
   const startAsOfferer = async () => {
     setStep('offering')
+    const rtc = getP2PManager()
     const offer = await rtc.createOffer()
     setSdp(offer)
     setStep('show-offer')
   }
 
   const handleAnswerScanned = async (answer) => {
+    const rtc = getP2PManager()
     await rtc.acceptAnswer(answer)
     setStep('connected')
   }
@@ -38,6 +27,7 @@ export default function QRExchange() {
 
   const handleOfferScanned = async (offer) => {
     setStep('answering')
+    const rtc = getP2PManager()
     const answer = await rtc.acceptOffer(offer)
     setSdp(answer)
     setStep('show-answer')

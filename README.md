@@ -41,7 +41,7 @@ Patient Phone                    Relay Phone                   Doctor Phone
 | Broker | HiveMQ (session-scoped topics) | Scoped topic prefix prevents cross-session leaks |
 | AI Transcription | Whisper Tiny WASM (Transformers.js) | On-device, zero bandwidth, zero privacy issues |
 | AI Translation | M2M-100 418M via Transformers.js | On-device, 100 languages, zero cloud |
-| Local Database | RxDB + IndexedDB | Offline-first, auto sync, conflict resolution |
+| Local Database | RxDB + IndexedDB (schema ready) | Offline-first, auto sync, conflict resolution |
 | P2P Offline | WebRTC Data Channel + QR bootstrap | Zero server for local mesh |
 | Audio | Opus via MediaRecorder | Native browser, 16kHz mono ~50KB/min |
 | Cloud Storage | Cloudflare R2 (WEUR) | Zero egress fees, GDPR compliant |
@@ -125,7 +125,7 @@ npm run dev
 - [x] M2M-100 on-device translation — 100 languages, graceful fallback on failure
 - [x] MQTT QoS 1 resilient messaging — survives 2G, session-scoped topics
 - [x] Doctor ACK confirmation — patient knows when doctor actually received
-- [x] RxDB IndexedDB offline-first database
+- [x] RxDB IndexedDB schema defined (persistence wiring in roadmap)
 - [x] WebRTC P2P via QR code — zero-server mesh with manual paste fallback
 - [x] Fuzzy GPS privacy layer (~1km)
 - [x] Anonymous UUID — zero registration

@@ -6,6 +6,7 @@ import { getDeviceId } from '../../lib/deviceId'
 import { publish, subscribe } from '../../lib/mqttClient'
 import { topic } from '../../lib/topicPrefix'
 import { getWhisperWorker, getTranslateWorker } from '../../lib/aiWorkers'
+import { sendViaP2P, isP2PConnected } from '../../lib/p2pManager'
 import RecordButton from './RecordButton'
 import BodyMap from './BodyMap'
 import SymptomsGrid from './SymptomsGrid'
@@ -35,15 +36,18 @@ export default function PatientView() {
 
   useEffect(() => {
     const deviceId = getDeviceId()
-    const unsub = subscribe(topic(`ack/${deviceId}`), (ack) => {
+    const unsubAck = subscribe(topic(`ack/${deviceId}`), (ack) => {
       if (ack.messageId) {
         updateMessage(ack.messageId, { status: 'seen' })
         setProcessingStage('seen')
         setTimeout(() => setProcessingStage(null), 4000)
       }
     })
-    return unsub
-  }, [updateMessage, setProcessingStage])
+    const unsubResponses = subscribe(topic(`responses/${deviceId}`), (resp) => {
+      addMessage(resp)
+    })
+    return () => { unsubAck(); unsubResponses() }
+  }, [updateMessage, setProcessingStage, addMessage])
 
   const handleRecordingStart = () => {
     audioRef.current.startRecording()
@@ -148,8 +152,21 @@ export default function PatientView() {
     setProcessingStage('sending')
     msg.status = 'sent'
 
-    publish(topic(`messages/${getDeviceId()}`), msg)
-    updateMessage(msg.id, { status: 'sent' })
+    if (connectionStatus === 'connected') {
+      publish(topic(`messages/${getDeviceId()}`), msg)
+    } else if (isP2PConnected()) {
+      sendViaP2P(msg)
+      msg.hopCount = 1
+    } else {
+      publish(topic(`messages/${getDeviceId()}`), msg)
+    }
+
+    updateMessage(msg.id, {
+      status: 'sent',
+      transcriptOriginal: msg.transcriptOriginal,
+      transcriptTranslated: msg.transcriptTranslated,
+      hopCount: msg.hopCount
+    })
 
     setProcessingStage('sent')
     clearSymptoms()

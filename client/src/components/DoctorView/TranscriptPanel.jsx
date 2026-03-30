@@ -46,7 +46,7 @@ export default function TranscriptPanel({ message }) {
         </div>
       )}
 
-      {(message.latFuzzy || message.lngFuzzy) && (
+      {(message.latFuzzy != null && message.lngFuzzy != null && (message.latFuzzy !== 0 || message.lngFuzzy !== 0)) && (
         <div className="transcript-section">
           <h4 className="transcript-heading">
             <span className="transcript-icon">📍</span>
